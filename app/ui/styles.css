@@ -1,0 +1,13 @@
+body { background-color: #121214; color: #e1e1e6; font-family: sans-serif; padding: 2rem; }
+.container { max-width: 650px; margin: 0 auto; }
+.section { background: #202024; padding: 1.5rem; border-radius: 6px; margin-bottom: 1.5rem; }
+h1 { color: #04d361; border-bottom: 2px solid #29292e; padding-bottom: 1rem; }
+input { display: block; width: 95%; padding: 0.6rem; margin-bottom: 0.8rem; background: #121214; border: 1px solid #29292e; color: #fff; border-radius: 4px; }
+button { background: #04d361; color: #000; border: none; padding: 0.7rem 1.5rem; font-weight: bold; border-radius: 4px; cursor: pointer; }
+button:hover { background: #00b34d; }
+.badge { display: inline-block; padding: 0.4rem 0.8rem; border-radius: 4px; font-weight: bold; }
+.checking { background: #eca72c; color: #000; }
+.healthy { background: #04d361; color: #000; }
+.degraded { background: #f75a68; color: #fff; }
+.result-box { background: #121214; border-left: 4px solid #04d361; padding: 1rem; margin-top: 1rem; font-family: monospace; white-space: pre-wrap; }
+.error-box { background: #2c1a1d; border-left: 4px solid #f75a68; color: #f75a68; padding: 1rem; margin-top: 1rem; }

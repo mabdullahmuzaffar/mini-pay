@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MiniPay Operator Terminal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>MiniPay Operator System</h1>
+        
+        <!-- Health Section -->
+        <div class="section">
+            <h3>System Status</h3>
+            <div id="health-badge" data-testid="health-badge" class="badge checking">Verifying...</div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="section">
+            <h3>Transaction Reference Search</h3>
+            <input type="text" id="search-input" data-testid="search-input" placeholder="Enter transaction reference">
+            <button id="search-button" data-testid="search-button">Search Trace</button>
+            <div id="search-result" data-testid="search-result" class="result-box" hidden></div>
+            <div id="search-error" data-testid="search-error" class="error-box" hidden></div>
+        </div>
+
+        <!-- Payment Creation Section -->
+        <div class="section">
+            <h3>Process New Payment</h3>
+            <input type="text" id="pay-customer" data-testid="pay-customer" placeholder="Customer Reference ID">
+            <input type="number" id="pay-amount" data-testid="pay-amount" placeholder="Amount (USD)" step="0.01">
+            <input type="text" id="pay-ref" data-testid="pay-ref" placeholder="Unique Transaction Reference">
+            <input type="password" id="pay-key" data-testid="pay-key" placeholder="X-API-Key Credentials">
+            <button id="pay-button" data-testid="pay-button">Submit Ledger Entry</button>
+            <div id="pay-result" data-testid="pay-result" class="result-box" hidden></div>
+            <div id="pay-error" data-testid="pay-error" class="error-box" hidden></div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
