@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+*.db
+database/seed.sql
+.pytest_cache/
+node_modules/
+evidence/ui-artifacts/
+*.log
+.DS_Store
