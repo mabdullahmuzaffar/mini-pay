@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
             badge.className = "badge degraded";
         });
 
-    // Reference Search Action
+    // Reference Search Action - Aligned exactly with Phase 5 backend specs
     document.getElementById("search-button").addEventListener("click", () => {
         const ref = document.getElementById("search-input").value;
         const resDiv = document.getElementById("search-result");
@@ -29,10 +29,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!ref) return;
 
-        fetch(`/api/payments/search/transactions?ref=${encodeURIComponent(ref)}`)
+        fetch(`/api/transactions?ref=${encodeURIComponent(ref)}`)
             .then(async res => {
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.detail || "Query operation faulted");
+                // Explicit sanity guard: if no items found in the array block, throw error to UI
+                if (data.count === 0 || !data.results || data.results.length === 0) {
+                    throw new Error("Transaction not found");
+                }
                 resDiv.innerText = JSON.stringify(data, null, 2);
                 resDiv.hidden = false;
             })
@@ -66,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(async res => {
             const data = await res.json();
             if (!res.ok) throw new Error(data.detail || "Transaction processing rejected");
-            resDiv.innerText = `Success! Status Code: ${res.status}\n` + JSON.stringify(data, null, 2);
+            resDiv.innerText = `Success!\n` + JSON.stringify(data, null, 2);
             resDiv.hidden = false;
         })
         .catch(err => {
