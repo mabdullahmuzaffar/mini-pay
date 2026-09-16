@@ -17,7 +17,7 @@ class MiniPayClient:
 
     def search_transaction(self, ref: str):
         r = self.session.get(
-            f"{self.config.api_url}/api/payments/search/transactions",
+            f"{self.config.api_url}/api/transactions",
             params={"ref": ref},
             timeout=self.config.timeout
         )
