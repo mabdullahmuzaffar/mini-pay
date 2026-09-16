@@ -14,19 +14,15 @@ async def create_payment(
     db: Session = Depends(get_db),
     _api_key: str = Depends(require_api_key)
 ):
-    # 1. Lookup customer profile by reference identity string
     customer = db.query(models.Customer).filter(models.Customer.customer_ref == payload.customer_ref).first()
     if not customer:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
 
-    # 2. Idempotency Check: Verify if this specific reference identifier already exists
     existing_txn = db.query(models.Transaction).filter(models.Transaction.transaction_ref == payload.transaction_ref).first()
     if existing_txn:
-        # Override the default 201 header status with an idempotent 200 OK
         response.status_code = status.HTTP_200_OK
         return existing_txn
 
-    # 3. Handle pristine ledger workflow entry
     new_txn = models.Transaction(
         transaction_ref=payload.transaction_ref,
         customer_id=customer.id,
@@ -38,7 +34,6 @@ async def create_payment(
     db.commit()
     db.refresh(new_txn)
 
-    # 4. Initialize matching baseline callback log record
     new_callback = models.Callback(
         transaction_id=new_txn.id,
         attempt_no=1,
@@ -54,8 +49,7 @@ async def create_payment(
 @router.get("/api/payments/{id}", response_model=schemas.PaymentOut)
 async def get_payment_by_id(id: int, db: Session = Depends(get_db)):
     txn = db.query(models.Transaction).filter(models.Transaction.id == id).first()
-    if not txn:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Transaction not found")
+    # INTENTIONAL BUG FOR INCIDENT-001: Accessing attributes on None will trigger a 500 error payload
     return txn
 
 @router.get("/api/transactions", response_model=dict)
