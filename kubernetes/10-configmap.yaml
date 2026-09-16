@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: minipay-config
+  namespace: minipay
+data:
+  POSTGRES_DB: minipay
+  POSTGRES_USER: minipay
+  LOG_LEVEL: INFO
+  AUTO_CREATE_TABLES: "false"

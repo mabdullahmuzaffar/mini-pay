@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minipay-api
+  namespace: minipay
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: minipay-api
+  template:
+    metadata:
+      labels:
+        app: minipay-api
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: postgres:16
+          command: ["sh", "-c", "until pg_isready -h minipay-db -U minipay; do sleep 2; done"]
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+      containers:
+        - name: api
+          image: minipay-api:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: minipay-secrets
+                  key: DATABASE_URL
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minipay-secrets
+                  key: API_KEY
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: minipay-config
+                  key: LOG_LEVEL
+            - name: AUTO_CREATE_TABLES
+              valueFrom:
+                configMapKeyRef:
+                  name: minipay-config
+                  key: AUTO_CREATE_TABLES
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minipay-api
+  namespace: minipay
+spec:
+  selector:
+    app: minipay-api
+  ports:
+    - port: 8080
+      targetPort: 8080
