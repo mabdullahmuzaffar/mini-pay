@@ -49,7 +49,8 @@ async def create_payment(
 @router.get("/api/payments/{id}", response_model=schemas.PaymentOut)
 async def get_payment_by_id(id: int, db: Session = Depends(get_db)):
     txn = db.query(models.Transaction).filter(models.Transaction.id == id).first()
-    # INTENTIONAL BUG FOR INCIDENT-001: Accessing attributes on None will trigger a 500 error payload
+    if not txn:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Transaction not found")
     return txn
 
 @router.get("/api/transactions", response_model=dict)
