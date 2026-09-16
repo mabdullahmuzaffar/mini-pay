@@ -2,7 +2,7 @@
 
 **Candidate:** Muhammad Abdullah Muzaffar
 **Position:** Implementation & L2 Support Engineer
-**Repository:** FILL_IN_AFTER_PUSH
+**Repository:** https://github.com/mabdullahmuzaffar/mini-pay
 
 ## Quick start
 
